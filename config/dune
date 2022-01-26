@@ -4,5 +4,6 @@
 
 (rule
  (targets cflags ctypes-cflags)
- (action (run ./discover.exe -cstubs %{lib:ctypes:ctypes_cstubs_internals.h})))
+ (deps (package ctypes))
+ (action (run ./discover.exe -cstubs %{lib:ctypes:ctypes_cstubs_internals.h} -integers %{lib:integers:ocaml_integers.h})))
 

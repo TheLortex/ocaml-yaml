@@ -15,10 +15,12 @@ let ppc64_lines c =
 
 let () =
   let cstubs = ref "" in
-  let args = Arg.["-cstubs",Set_string cstubs,"cstubs loc"] in
+  let integers = ref "" in
+  let args = Arg.["-cstubs",Set_string cstubs,"cstubs loc"; "-integers",Set_string integers,"integers loc"] in
   C.main ~args ~name:"yaml" (fun c ->
-    let cstubs_cflags = Printf.sprintf "-I%s" (Filename.dirname !cstubs) in
+    let cstubs_cflags = Printf.sprintf "-I%s" (Unix.realpath (Filename.dirname !cstubs)) in
+    let integers_cflags = Printf.sprintf "-I%s" (Unix.realpath (Filename.dirname !integers)) in
     let lines = ocamlopt_lines c @ ppc64_lines c in
     C.Flags.write_lines "cflags" lines;
-    C.Flags.write_lines "ctypes-cflags" [cstubs_cflags]
+    C.Flags.write_lines "ctypes-cflags" [cstubs_cflags; integers_cflags]
   )
